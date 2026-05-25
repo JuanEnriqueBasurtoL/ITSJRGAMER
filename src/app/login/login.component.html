@@ -1,0 +1,73 @@
+<div class="login-container">
+  <div class="split-left">
+    <div class="left-content">
+      <span class="big-icon">LG</span>
+      <div class="left-logo">ITSJR<span>GAMER</span></div>
+      <div class="left-tagline">Hub Gamer del Instituto Tecnologico de San Juan del Rio</div>
+      <div class="left-features">
+        <div class="feat-item">
+          <div class="feat-icon">NW</div>
+          <div>
+            <h4>Noticias & Tendencias</h4>
+            <p>Las ultimas noticias del gaming y proximos lanzamientos.</p>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">QZ</div>
+          <div>
+            <h4>Quiz Gamer</h4>
+            <p>Compite con tu comunidad y sube al ranking ITSJR.</p>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">MP</div>
+          <div>
+            <h4>Marketplace Estudiantil</h4>
+            <p>Vende y compra equipo gamer entre companeros.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="split-right">
+    <div class="form-header">
+      <h2>Bienvenido de vuelta</h2>
+      <p>Ingresa a tu cuenta gamer</p>
+    </div>
+
+    <div class="error-msg visible" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <div class="success-msg" *ngIf="message">
+      {{ message }}
+    </div>
+
+    <form (ngSubmit)="submit()" style="width:100%;">
+      <div class="form-group">
+        <label>Correo electronico</label>
+        <input type="email" name="email" [(ngModel)]="form.email" placeholder="tucorreo@itsjr.edu.mx" required />
+      </div>
+
+      <div class="form-group">
+        <label>Contrasena</label>
+        <input type="password" name="password" [(ngModel)]="form.password" placeholder="********" required />
+      </div>
+
+      <div class="remember-row">
+        <label>
+          <input type="checkbox" /> Recordarme
+        </label>
+        <a href="#">Olvidaste tu contrasena?</a>
+      </div>
+
+      <button type="submit" class="btn-full btn-primary-full">Entrar al Hub</button>
+    </form>
+
+    <div class="form-footer">
+      Aun no tienes cuenta?
+      <a [routerLink]="['/register']" [queryParams]="{ returnUrl: returnUrl }">Registrate gratis</a>
+    </div>
+  </div>
+</div>

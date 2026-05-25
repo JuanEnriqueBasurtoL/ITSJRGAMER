@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ITSJRGAMER": "node dist/ITSJRGAMER/server/server.mjs"
+    "serve:ssr:ITSJRGAMER": "node dist/ITSJRGAMER/server/server.mjs",
+    "start:ssr": "node dist/ITSJRGAMER/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
@@ -20,7 +21,9 @@
     "@angular/platform-server": "^21.2.0",
     "@angular/router": "^21.2.0",
     "@angular/ssr": "^21.2.0",
+    "chart.js": "^4.5.1",
     "express": "^5.1.0",
+    "mysql2": "^3.22.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

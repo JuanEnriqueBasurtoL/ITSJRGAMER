@@ -1,0 +1,960 @@
+main {
+  padding-top: 80px;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* NAV STYLES */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: rgba(6, 8, 16, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo span {
+  color: var(--accent2);
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-links a.active {
+  color: var(--accent);
+}
+
+.nav-links a.active::after {
+  transform: scaleX(1);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 3rem 2rem;
+}
+
+.page-header {
+  margin-bottom: 2.5rem;
+}
+
+.page-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.page-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.2rem;
+  font-weight: 900;
+}
+
+.page-title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.empty-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* QUIZ LOBBY */
+#quizLobby {}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.quiz-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.quiz-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 240, 255, 0.1);
+}
+
+.quiz-card-top {
+  padding: 2rem;
+  text-align: center;
+  font-size: 4rem;
+  background: linear-gradient(135deg, var(--surface2), var(--bg));
+}
+
+.quiz-card-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.quiz-card-body h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.quiz-card-body p {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.quiz-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+}
+
+.quiz-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+}
+
+.difficulty {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.diff-easy {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+}
+
+.diff-mid {
+  background: rgba(245, 196, 0, 0.15);
+  color: var(--gold);
+}
+
+.diff-hard {
+  background: rgba(255, 60, 110, 0.15);
+  color: var(--accent2);
+}
+
+.play-btn {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background: rgba(0, 240, 255, 0.08);
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.play-btn:hover {
+  background: rgba(0, 240, 255, 0.15);
+}
+
+/* QUIZ SELECTION */
+#quizSelection {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.selection-view {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.back-btn {
+  align-self: flex-start;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  transition: all 0.2s;
+  margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  transform: translateX(-2px);
+}
+
+.selection-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.selection-header h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.selection-header p {
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+.quiz-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.selection-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.selection-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 240, 255, 0.2);
+}
+
+.selection-card-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.selection-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+}
+
+.selection-card h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.selection-card p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.selection-meta {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.meta-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.btn-play {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  color: var(--bg);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.btn-play:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.3);
+}
+
+/* QUIZ GAME - KAHOOT STYLE */
+.game-view {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.game-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.game-icon {
+  font-size: 2rem;
+}
+
+.timer-display {
+  font-family: 'Orbitron', monospace;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold);
+  padding: 0.5rem 1.5rem;
+  background: rgba(245, 196, 0, 0.1);
+  border-radius: 8px;
+  min-width: 80px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.timer-display.urgent {
+  color: var(--accent2);
+  background: rgba(255, 60, 110, 0.15);
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.quiz-game-container {
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.quiz-progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.question-display {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.q-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.question-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* KAHOOT OPTIONS */
+.options-kahoot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.option-kahoot {
+  position: relative;
+  padding: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+.option-kahoot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.option-0 {
+  border-color: #ff4444;
+}
+
+.option-0:hover:not(:disabled) {
+  background: rgba(255, 68, 68, 0.15);
+  border-color: #ff6666;
+}
+
+.option-1 {
+  border-color: #44ccff;
+}
+
+.option-1:hover:not(:disabled) {
+  background: rgba(68, 204, 255, 0.15);
+  border-color: #66ddff;
+}
+
+.option-2 {
+  border-color: #ffaa44;
+}
+
+.option-2:hover:not(:disabled) {
+  background: rgba(255, 170, 68, 0.15);
+  border-color: #ffbb66;
+}
+
+.option-3 {
+  border-color: #44ff88;
+}
+
+.option-3:hover:not(:disabled) {
+  background: rgba(68, 255, 136, 0.15);
+  border-color: #66ff99;
+}
+
+.option-kahoot:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.option-kahoot.correct {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+  animation: correctAnswer 0.6s ease;
+}
+
+@keyframes correctAnswer {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.option-kahoot.wrong {
+  border-color: var(--accent2);
+  background: rgba(255, 60, 110, 0.2);
+  color: var(--accent2);
+  animation: wrongAnswer 0.6s ease;
+}
+
+@keyframes wrongAnswer {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.option-letter {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.1);
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.option-text {
+  flex: 1;
+  word-wrap: break-word;
+}
+
+/* RESULTS */
+.results-view {
+  animation: slideUp 0.3s ease;
+}
+
+.results-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+}
+
+.result-icon {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+.result-message {
+  font-family: 'Orbitron', monospace;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.result-stats-container {
+  margin-bottom: 2rem;
+}
+
+.score-display {
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.final-score {
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--bg);
+}
+
+.score-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--bg);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.result-details {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.detail-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.detail-value.correct {
+  color: #00ff88;
+}
+
+.detail-value.wrong {
+  color: var(--accent2);
+}
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 200px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  color: var(--bg);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: rgba(0, 240, 255, 0.1);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 240, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* RANKING SIDEBAR */
+.quiz-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.sidebar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  position: sticky;
+  top: 100px;
+}
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rank-list {
+  padding: 0.5rem 0;
+}
+
+.rank-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  transition: background 0.2s;
+}
+
+.rank-row:hover {
+  background: rgba(0, 240, 255, 0.04);
+}
+
+.rk-pos {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  font-weight: 900;
+  min-width: 28px;
+  text-align: center;
+}
+
+.pos-1 {
+  color: var(--gold);
+}
+
+.pos-2 {
+  color: #c0c0c0;
+}
+
+.pos-3 {
+  color: #cd7f32;
+}
+
+.rk-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.rk-name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.rk-score {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .quiz-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .options-kahoot {
+    grid-template-columns: 1fr;
+  }
+
+  .question-text {
+    font-size: 1.3rem;
+  }
+
+  .option-kahoot {
+    padding: 1.5rem;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-width: auto;
+  }
+}

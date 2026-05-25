@@ -1,1 +1,54 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --bg: #060810;
+  --surface: #0d1117;
+  --surface2: #161b26;
+  --border: #1e2d40;
+  --accent: #00f0ff;
+  --accent2: #ff3c6e;
+  --accent3: #a259ff;
+  --text: #e4eaf5;
+  --text-dim: #6b7a99;
+  --gold: #f5c400;
+}
+
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+html { 
+  scroll-behavior: smooth; 
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* GRID BG */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}

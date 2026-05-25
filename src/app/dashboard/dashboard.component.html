@@ -1,0 +1,321 @@
+<div class="dashboard-shell">
+  <header class="dashboard-header">
+    <div>
+      <span class="eyebrow">// Panel administrador</span>
+      <h1>Dashboard ITSJR Gamer</h1>
+      <p>Analitica, control de usuarios, quizzes, marketplace y noticias desde un solo lugar.</p>
+    </div>
+
+    <div class="header-actions">
+      <div class="admin-chip">
+        <span>Admin</span>
+        <strong>{{ authService.currentUser()?.username }}</strong>
+      </div>
+      <a routerLink="/" class="ghost-link">Volver al inicio</a>
+      <button type="button" class="danger-link" (click)="logout()">Cerrar sesion</button>
+    </div>
+  </header>
+
+  <div class="feedback success" *ngIf="feedback">{{ feedback }}</div>
+  <div class="feedback error" *ngIf="error">{{ error }}</div>
+
+  <nav class="dashboard-tabs">
+    <button *ngFor="let tab of tabs" type="button" [class.active]="activeTab === tab" (click)="setTab(tab)">
+      {{ tab === 'analytics' ? 'Analitica' : tab === 'users' ? 'Usuarios' : tab === 'quizzes' ? 'Quizzes' : tab === 'products' ? 'Productos' : 'Noticias' }}
+    </button>
+  </nav>
+
+  <section *ngIf="activeTab === 'analytics'">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Usuarios</h3>
+        <div class="stat-number">{{ stats.totalUsers }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Ventas Totales</h3>
+        <div class="stat-number">${{ stats.totalSales | number:'1.0-2' }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Productos</h3>
+        <div class="stat-number">{{ stats.totalProducts }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pedidos</h3>
+        <div class="stat-number">{{ stats.totalOrders }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Usuarios Suspendidos</h3>
+        <div class="stat-number">{{ extraStats.suspendedUsers }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Quizzes Activos</h3>
+        <div class="stat-number">{{ extraStats.activeQuizzes }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Noticias Publicadas</h3>
+        <div class="stat-number">{{ extraStats.publishedNews }}</div>
+      </div>
+      <div class="stat-card">
+        <h3>Intentos de Quiz</h3>
+        <div class="stat-number">{{ extraStats.totalQuizAttempts }}</div>
+      </div>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Actividad Semanal</h3>
+        <div class="chart-wrap">
+          <canvas id="activityChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Distribucion por Categoria</h3>
+        <div class="chart-wrap">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Estados de Usuarios</h3>
+        <div class="chart-wrap">
+          <canvas id="userStatusChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Intentos de Quiz por Semana</h3>
+        <div class="chart-wrap">
+          <canvas id="quizActivityChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card chart-card-wide">
+        <h3>Balance General del Sitio</h3>
+        <div class="chart-wrap">
+          <canvas id="moduleChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="activeTab === 'users'" class="panel-card">
+    <div class="panel-head">
+      <h2>Usuarios registrados</h2>
+      <p>Modifica datos, cambia el estado o da de baja cuentas directamente.</p>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <span>Modifica cualquier campo y luego usa `Guardar cambios` o `Dar de baja`.</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Gamertag</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Carrera</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td><input [(ngModel)]="user.gamertag" /></td>
+            <td>
+              <div class="stack-inputs">
+                <input [(ngModel)]="user.firstName" placeholder="Nombre" />
+                <input [(ngModel)]="user.lastName" placeholder="Apellido" />
+              </div>
+            </td>
+            <td><input [(ngModel)]="user.email" /></td>
+            <td><span class="status-badge">{{ user.roleName }}</span></td>
+            <td>
+              <select [(ngModel)]="user.status">
+                <option value="active">Activo</option>
+                <option value="pending">Pendiente</option>
+                <option value="suspended">Suspendido</option>
+              </select>
+            </td>
+            <td>{{ user.career || 'Sin carrera' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="primary-btn" (click)="saveUser(user)">Guardar cambios</button>
+                <button type="button" class="danger-btn" (click)="deactivateUser(user)">Dar de baja</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section *ngIf="activeTab === 'quizzes'" class="quiz-admin-grid">
+    <div class="panel-card">
+      <div class="panel-head">
+        <h2>{{ quizForm.id ? 'Editar quiz' : 'Nuevo quiz' }}</h2>
+        <p>Crea nuevos quizzes o modifica los existentes con sus preguntas y respuestas.</p>
+      </div>
+
+      <div class="quiz-form-grid">
+        <label>
+          <span>Titulo</span>
+          <input [(ngModel)]="quizForm.title" />
+        </label>
+        <label>
+          <span>Icono</span>
+          <input [(ngModel)]="quizForm.icon" maxlength="4" />
+        </label>
+        <label>
+          <span>Dificultad</span>
+          <select [(ngModel)]="quizForm.difficulty">
+            <option value="easy">Facil</option>
+            <option value="mid">Medio</option>
+            <option value="hard">Dificil</option>
+          </select>
+        </label>
+        <label>
+          <span>Tiempo por pregunta</span>
+          <input type="number" min="5" [(ngModel)]="quizForm.timePerQuestion" />
+        </label>
+        <label class="full-width">
+          <span>Descripcion</span>
+          <textarea rows="3" [(ngModel)]="quizForm.description"></textarea>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="quizForm.isActive" />
+          <span>Quiz activo</span>
+        </label>
+      </div>
+
+      <div class="question-editor" *ngFor="let question of quizForm.questions; let i = index">
+        <div class="question-head">
+          <h3>Pregunta {{ i + 1 }}</h3>
+          <button type="button" class="ghost-mini" (click)="removeQuestion(i)">Eliminar</button>
+        </div>
+        <input [(ngModel)]="question.text" placeholder="Pregunta" />
+        <input [(ngModel)]="question.hint" placeholder="Pista opcional" />
+        <div class="options-grid">
+          <label *ngFor="let option of question.options; let j = index">
+            <span>Opcion {{ j + 1 }}</span>
+            <input [(ngModel)]="question.options[j]" />
+          </label>
+        </div>
+        <label>
+          <span>Respuesta correcta</span>
+          <select [(ngModel)]="question.correct">
+            <option [ngValue]="0">Opcion 1</option>
+            <option [ngValue]="1">Opcion 2</option>
+            <option [ngValue]="2">Opcion 3</option>
+            <option [ngValue]="3">Opcion 4</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="ghost-link large" (click)="addQuestion()">Agregar pregunta</button>
+        <button type="button" class="ghost-link large" (click)="resetQuizForm()">Limpiar</button>
+        <button type="button" class="primary-btn large" (click)="saveQuiz()">{{ quizForm.id ? 'Actualizar quiz' : 'Crear quiz' }}</button>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-head">
+        <h2>Quizzes existentes</h2>
+        <p>Selecciona uno para editarlo o desactivalo si ya no quieres mostrarlo.</p>
+      </div>
+
+      <div class="list-stack">
+        <article class="mini-card" *ngFor="let quiz of quizzes">
+          <div>
+            <strong>{{ quiz.icon }} {{ quiz.title }}</strong>
+            <p>{{ quiz.description }}</p>
+            <span class="status-badge" [class.inactive]="!quiz.isActive">{{ quiz.isActive ? 'Activo' : 'Inactivo' }}</span>
+          </div>
+          <div class="row-actions">
+            <button type="button" class="primary-btn" (click)="editQuiz(quiz)">Editar</button>
+            <button type="button" class="danger-btn" (click)="disableQuiz(quiz)">Desactivar</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="activeTab === 'products'" class="panel-card">
+    <div class="panel-head">
+      <h2>Productos publicados</h2>
+      <p>Revisa el marketplace y elimina publicaciones que ya no deban mostrarse.</p>
+    </div>
+
+    <div class="list-stack">
+      <article class="mini-card" *ngFor="let product of products">
+        <div>
+          <strong>{{ product.title }}</strong>
+          <p>{{ product.category }} · {{ product.seller }} · ${{ product.price | number:'1.0-2' }}</p>
+          <span class="status-badge">{{ product.status }}</span>
+        </div>
+        <button type="button" class="danger-btn" (click)="removeProduct(product)">Eliminar producto</button>
+      </article>
+    </div>
+  </section>
+
+  <section *ngIf="activeTab === 'news'" class="quiz-admin-grid">
+    <div class="panel-card">
+      <div class="panel-head">
+        <h2>Publicar noticia</h2>
+        <p>Crea noticias nuevas para la portada y los modulos informativos.</p>
+      </div>
+
+      <div class="quiz-form-grid">
+        <label class="full-width">
+          <span>Titulo</span>
+          <input [(ngModel)]="newsForm.title" />
+        </label>
+        <label>
+          <span>Categoria</span>
+          <input [(ngModel)]="newsForm.category" />
+        </label>
+        <label class="full-width">
+          <span>Resumen</span>
+          <textarea rows="3" [(ngModel)]="newsForm.summary"></textarea>
+        </label>
+        <label class="full-width">
+          <span>Contenido</span>
+          <textarea rows="6" [(ngModel)]="newsForm.content"></textarea>
+        </label>
+      </div>
+
+      <div class="upload-block">
+        <label class="primary-btn upload-label">
+          Seleccionar imagen
+          <input type="file" accept="image/*" (change)="onNewsImageSelected($event)" />
+        </label>
+        <button *ngIf="newsForm.imageData" type="button" class="ghost-link" (click)="clearNewsImage()">Quitar imagen</button>
+      </div>
+
+      <div class="image-preview" *ngIf="newsForm.imageData">
+        <img [src]="newsForm.imageData" alt="Vista previa noticia" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="primary-btn large" (click)="publishNews()">Publicar noticia</button>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-head">
+        <h2>Noticias registradas</h2>
+        <p>Consulta y archiva noticias existentes del sitio.</p>
+      </div>
+
+      <div class="list-stack">
+        <article class="mini-card" *ngFor="let item of news">
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.category }} · {{ item.author }}</p>
+            <span class="status-badge">{{ item.status }}</span>
+          </div>
+          <button type="button" class="danger-btn" (click)="archiveNews(item)">Archivar</button>
+        </article>
+      </div>
+    </div>
+  </section>
+</div>

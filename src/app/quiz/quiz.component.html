@@ -1,0 +1,194 @@
+<nav>
+  <a routerLink="/" class="nav-logo">
+    <div class="logo-icon">GG</div>
+    ITSJR<span>GAMER</span>
+  </a>
+  <ul class="nav-links">
+    <li><a routerLink="/">Noticias</a></li>
+    <li><a routerLink="/quiz" class="active">Quiz</a></li>
+    <li><a routerLink="/marketplace">Marketplace</a></li>
+  </ul>
+  <a href="#" class="btn btn-ghost">Mi perfil</a>
+</nav>
+
+<main>
+  <div class="container">
+    <div id="quizLobby" *ngIf="showLobby">
+      <div class="page-header">
+        <span class="page-tag">// Quiz Gamer</span>
+        <h1 class="page-title">Pon a prueba tu <em>conocimiento</em></h1>
+      </div>
+      <div class="quiz-layout">
+        <div>
+          <div class="empty-block" *ngIf="loading">
+            Cargando quizzes desde la base de datos...
+          </div>
+
+          <div class="empty-block" *ngIf="!loading && !quizzes.length">
+            Aun no hay quizzes cargados en tu base de datos.
+          </div>
+
+          <div class="quiz-grid" *ngIf="!loading && quizzes.length">
+            <div class="quiz-card" *ngFor="let quiz of quizzes" (click)="startQuizSelection()">
+              <span class="difficulty" [ngClass]="'diff-' + quiz.difficulty">
+                {{ quiz.difficulty === 'easy' ? 'Facil' : quiz.difficulty === 'mid' ? 'Medio' : 'Dificil' }}
+              </span>
+              <div class="quiz-card-top">{{ quiz.icon }}</div>
+              <div class="quiz-card-body">
+                <h3>{{ quiz.title }}</h3>
+                <p>{{ quiz.description }}</p>
+                <div class="quiz-meta">
+                  <span>{{ quiz.questions.length }} preguntas</span>
+                  <span>{{ quiz.timePerQuestion }} seg/c</span>
+                </div>
+              </div>
+              <div class="play-btn">Ver mas</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar-header">Top Jugadores</div>
+          <div class="rank-list">
+            <div class="rank-row" *ngFor="let player of ranking">
+              <span class="rk-pos" [class.pos-1]="player.position === 1" [class.pos-2]="player.position === 2" [class.pos-3]="player.position === 3">
+                {{ player.position }}
+              </span>
+              <div class="rk-avatar">GG</div>
+              <span class="rk-name">{{ player.gamertag }}</span>
+              <span class="rk-score">{{ player.totalScore | number }}</span>
+            </div>
+
+            <div class="rank-row" *ngIf="!ranking.length">
+              <span class="rk-name">Sin intentos registrados todavia.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizSelection" *ngIf="showQuizSelection" class="selection-view">
+      <button class="back-btn" (click)="resetQuiz()">Volver</button>
+      <div class="selection-header">
+        <h2>Elige tu Quiz</h2>
+        <p>Selecciona uno de los quizzes disponibles en tu base de datos</p>
+      </div>
+      <div class="quiz-selection-grid">
+        <div class="selection-card" *ngFor="let quiz of quizzes" (click)="selectQuizAndStart(quiz)">
+          <div class="selection-card-header">
+            <span class="difficulty" [ngClass]="'diff-' + quiz.difficulty">
+              {{ quiz.difficulty === 'easy' ? 'FACIL' : quiz.difficulty === 'mid' ? 'MEDIO' : 'DIFICIL' }}
+            </span>
+          </div>
+          <div class="selection-icon">{{ quiz.icon }}</div>
+          <h3>{{ quiz.title }}</h3>
+          <p>{{ quiz.description }}</p>
+          <div class="selection-meta">
+            <div class="meta-item">
+              <span class="meta-label">Preguntas</span>
+              <span class="meta-value">{{ quiz.questions.length }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Tiempo/Preg</span>
+              <span class="meta-value">{{ quiz.timePerQuestion }}s</span>
+            </div>
+          </div>
+          <button class="btn-play">JUGAR AHORA</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizGame" *ngIf="showGame" class="game-view">
+      <div class="game-header">
+        <button class="back-btn" (click)="backToSelection()">Cambiar Quiz</button>
+        <div class="game-title" *ngIf="selectedQuiz">
+          <span class="game-icon">{{ selectedQuiz.icon }}</span>
+          <span>{{ selectedQuiz.title }}</span>
+        </div>
+        <div class="timer-display" [class.urgent]="timeLeft <= 5">{{ timeLeft }}</div>
+      </div>
+
+      <div class="quiz-game-container">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" [style.width.%]="((current + 1) / questions.length) * 100"></div>
+        </div>
+
+        <div class="question-display" *ngIf="questions[current]">
+          <div class="q-number">Pregunta {{ current + 1 }} de {{ questions.length }}</div>
+          <div class="question-text">{{ questions[current].q }}</div>
+        </div>
+
+        <div class="options-kahoot">
+          <button
+            *ngFor="let opt of questions[current]?.opts; let i = index"
+            class="option-kahoot"
+            [ngClass]="'option-' + i"
+            [class.selected]="selectedAnswer === i"
+            [class.correct]="selectedAnswer === i && i === questions[current]?.correct"
+            [class.wrong]="selectedAnswer === i && i !== questions[current]?.correct"
+            [disabled]="selectedAnswer !== null || isAnswering"
+            (click)="selectAnswer(i)"
+          >
+            <div class="option-content">
+              <span class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
+              <span class="option-text">{{ opt }}</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizResults" *ngIf="showResults" class="results-view">
+      <div class="results-container">
+        <div class="result-icon" [ngClass]="correct >= questions.length * 0.8 ? 'excellent' : correct >= questions.length * 0.6 ? 'good' : 'ok'">
+          {{ correct >= questions.length * 0.8 ? 'GG' : correct >= questions.length * 0.6 ? 'OK' : 'UP' }}
+        </div>
+
+        <div class="result-message">{{ getResultMessage() }}</div>
+
+        <div class="result-stats-container">
+          <div class="score-display">
+            <div class="final-score">{{ score }}</div>
+            <div class="score-label">PUNTOS</div>
+          </div>
+        </div>
+
+        <div class="result-details">
+          <div class="detail-row" *ngIf="savingResult">
+            <span class="detail-label">Ranking:</span>
+            <span class="detail-value">Actualizando...</span>
+          </div>
+          <div class="detail-row" *ngIf="saveMessage">
+            <span class="detail-label">Ranking:</span>
+            <span class="detail-value correct">{{ saveMessage }}</span>
+          </div>
+          <div class="detail-row" *ngIf="saveError">
+            <span class="detail-label">Ranking:</span>
+            <span class="detail-value wrong">{{ saveError }}</span>
+          </div>
+          <div class="detail-row" *ngIf="selectedQuiz">
+            <span class="detail-label">Quiz:</span>
+            <span class="detail-value">{{ selectedQuiz.title }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Correctas:</span>
+            <span class="detail-value correct">{{ correct }}/{{ questions.length }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Incorrectas:</span>
+            <span class="detail-value wrong">{{ wrong }}/{{ questions.length }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Precision:</span>
+            <span class="detail-value">{{ questions.length ? ((correct / questions.length) * 100).toFixed(1) : 0 }}%</span>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-primary" (click)="backToSelection()">Otro Quiz</button>
+          <button class="btn-secondary" (click)="resetQuiz()">Volver al inicio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

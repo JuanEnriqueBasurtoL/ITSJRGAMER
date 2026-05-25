@@ -1,0 +1,95 @@
+<div class="register-container">
+  <div class="split-left">
+    <div class="left-content">
+      <span class="big-icon">RG</span>
+      <div class="left-logo">ITSJR<span>GAMER</span></div>
+      <div class="left-tagline">Unete a la comunidad gamer del ITSJR</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div><strong>Crea tu cuenta</strong><p>Registrate con tu correo institucional.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div><strong>Explora el Hub</strong><p>Accede a noticias, quizzes y marketplace.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div><strong>Compite y conecta</strong><p>Sube al ranking y contacta con gamers.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="split-right">
+    <div class="form-header">
+      <h2>Crear cuenta</h2>
+      <p>Unete al Hub Gamer del ITSJR</p>
+    </div>
+
+    <div class="feedback success" *ngIf="message">{{ message }}</div>
+    <div class="feedback error" *ngIf="error">{{ error }}</div>
+
+    <form (ngSubmit)="submit()" style="width:100%;">
+      <span class="section-label">// Informacion personal</span>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" name="firstName" [(ngModel)]="form.firstName" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" name="lastName" [(ngModel)]="form.lastName" placeholder="Tu apellido" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Correo electronico</label>
+        <input type="email" name="email" [(ngModel)]="form.email" placeholder="tucorreo@itsjr.edu.mx" required />
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de usuario (Gamertag)</label>
+        <input type="text" name="username" [(ngModel)]="form.username" placeholder="XxProGamer99" required />
+      </div>
+
+      <span class="section-label">// Seguridad</span>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contrasena</label>
+          <input type="password" name="password" [(ngModel)]="form.password" placeholder="********" id="pwd" (input)="onPasswordInput($event)" required />
+          <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
+        </div>
+        <div class="form-group">
+          <label>Confirmar contrasena</label>
+          <input type="password" name="confirmPassword" [(ngModel)]="form.confirmPassword" placeholder="********" required />
+        </div>
+      </div>
+
+      <div class="form-group" style="width:100%">
+        <label>Carrera</label>
+        <select name="career" [(ngModel)]="form.career">
+          <option value="">Selecciona tu carrera</option>
+          <option>Ingenieria en Sistemas Computacionales</option>
+          <option>Ingenieria Industrial</option>
+          <option>Ingenieria Mecatronica</option>
+          <option>Ingenieria en Gestion Empresarial</option>
+          <option>Licenciatura en Administracion</option>
+          <option>Otra</option>
+        </select>
+      </div>
+
+      <div class="terms">
+        <input type="checkbox" name="termsAccepted" [(ngModel)]="form.termsAccepted" />
+        <span>Acepto los <a href="#">Terminos de uso</a> y la <a href="#">Politica de privacidad</a> del Hub Gamer ITSJR.</span>
+      </div>
+
+      <button type="submit" class="btn-full btn-primary-full">Crear mi cuenta</button>
+    </form>
+
+    <div class="form-footer">
+      Ya tienes cuenta?
+      <a [routerLink]="['/login']" [queryParams]="{ returnUrl: returnUrl }">Inicia sesion</a>
+    </div>
+  </div>
+</div>

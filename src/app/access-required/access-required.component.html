@@ -1,0 +1,45 @@
+<section class="access-shell">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+  <div class="stars"></div>
+
+  <div class="access-card">
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">GG</span>
+      ITSJR<span>GAMER</span>
+    </a>
+
+    <div class="robot-wrap" aria-hidden="true">
+      <div class="robot-head">
+        <span class="eye"></span>
+        <span class="eye"></span>
+        <span class="mouth"></span>
+      </div>
+      <div class="robot-neck"></div>
+      <div class="robot-body">
+        <div class="robot-screen">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <div class="arm left"></div>
+      <div class="arm right"></div>
+      <div class="wheel left"></div>
+      <div class="wheel right"></div>
+    </div>
+
+    <p class="oops">Oops!</p>
+    <h1>{{ title }}</h1>
+    <p class="copy">{{ description }}</p>
+
+    <div class="actions">
+      <a class="cta primary" [routerLink]="['/login']" [queryParams]="{ returnUrl: returnUrl }">
+        Ir a login
+      </a>
+      <a class="cta secondary" [routerLink]="['/register']" [queryParams]="{ returnUrl: returnUrl }">
+        Crear cuenta
+      </a>
+    </div>
+  </div>
+</section>

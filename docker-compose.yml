@@ -1,0 +1,43 @@
+services:
+  db-server:
+    image: mariadb:10.11
+    container_name: itsjrgamer-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: itsjrgamer_db
+      MARIADB_CHARACTER_SET_SERVER: utf8mb4
+      MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  itsjrgamer-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: itsjrgamer-app
+    restart: unless-stopped
+    depends_on:
+      db-server:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      DB_HOST: db-server
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: itsjrgamer_db
+    ports:
+      - "80:4000"
+
+volumes:
+  mariadb_data:

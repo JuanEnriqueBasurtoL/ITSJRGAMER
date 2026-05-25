@@ -1,0 +1,237 @@
+<div class="marketplace-page">
+  <header class="topbar">
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">GG</span>
+      ITSJR<span>GAMER</span>
+    </a>
+
+    <div class="topbar-actions">
+      <a routerLink="/" class="back-link">Volver al inicio</a>
+    </div>
+  </header>
+
+  <section class="hero-panel">
+    <div class="hero-copy">
+      <span class="section-tag">// Marketplace estudiantil</span>
+      <h1>Compra y vende <em>entre gamers</em></h1>
+      <p>
+        Publica tus consolas, juegos y accesorios en una vista pensada para la comunidad
+        del ITSJR, con acceso rapido al mercado completo y a tu formulario de publicacion.
+      </p>
+
+      <div class="hero-actions">
+        <button
+          type="button"
+          class="btn btn-ghost"
+          [class.active]="currentView === 'market'"
+          (click)="setView('market')"
+        >
+          Ver mercado completo
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [class.active]="currentView === 'publish'"
+          (click)="setView('publish')"
+        >
+          Publicar articulo
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="hero-stat">
+        <strong>{{ items.length }}</strong>
+        <span>articulos activos</span>
+      </div>
+      <div class="hero-stat alt">
+        <strong>ITSJR</strong>
+        <span>marketplace gamer</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-panel" *ngIf="currentView === 'market'">
+    <div class="panel-header">
+      <div>
+        <span class="section-tag">// Catalogo</span>
+        <h2>Mercado completo</h2>
+      </div>
+
+      <p class="panel-copy">
+        Explora articulos disponibles, filtra por categoria y encuentra vendedores de la
+        comunidad.
+      </p>
+    </div>
+
+    <div class="filters">
+      <input
+        type="text"
+        placeholder="Buscar por articulo o vendedor"
+        [(ngModel)]="searchTerm"
+        (input)="filterItems()"
+      />
+
+      <select [(ngModel)]="selectedCategory" (change)="filterItems()">
+        <option value="">Todas las categorias</option>
+        <option value="juego">Juegos</option>
+        <option value="accesorio">Accesorios</option>
+        <option value="consola">Consolas</option>
+      </select>
+    </div>
+
+    <div class="success-banner" *ngIf="publishSuccess">
+      {{ publishSuccess }}
+    </div>
+
+    <div class="success-banner error" *ngIf="publishError">
+      {{ publishError }}
+    </div>
+
+    <div class="empty-state" *ngIf="loading">
+      Cargando articulos desde la base de datos...
+    </div>
+
+    <div class="items-grid" *ngIf="!loading && filteredItems.length">
+      <article class="item-card" *ngFor="let item of filteredItems">
+        <div class="item-visual">
+          <img *ngIf="item.imageData" [src]="item.imageData" [alt]="item.title" class="item-image" />
+          <span class="item-emoji" *ngIf="!item.imageData">{{ item.emoji }}</span>
+          <span class="item-badge">{{ getCategoryLabel(item.cat) }}</span>
+        </div>
+
+        <div class="item-body">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.desc }}</p>
+
+          <div class="item-meta">
+            <span class="price">${{ item.price | number }} MXN</span>
+            <span class="seller">Vende: {{ item.seller }}</span>
+          </div>
+
+          <div class="contact-actions">
+            <a class="contact-btn wa" [href]="'https://wa.me/' + item.wa.replace('+', '')" target="_blank" rel="noopener noreferrer">
+              WhatsApp
+            </a>
+            <a class="contact-btn mail" [href]="'mailto:' + item.mail">
+              Email
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredItems.length">
+      No hay articulos en la base de datos o no encontramos resultados con esos filtros.
+    </div>
+  </section>
+
+  <section class="content-panel" *ngIf="currentView === 'publish'">
+    <div class="panel-header">
+      <div>
+        <span class="section-tag">// Publicacion</span>
+        <h2>Publicar articulo</h2>
+      </div>
+
+      <p class="panel-copy">
+        Completa tu anuncio con informacion clara para que otros gamers puedan encontrarte.
+      </p>
+    </div>
+
+    <form class="publish-form" (ngSubmit)="publishItem()">
+      <div class="success-banner error" *ngIf="publishError">
+        {{ publishError }}
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span>Titulo del articulo</span>
+          <input type="text" name="title" [(ngModel)]="newItem.title" required />
+        </label>
+
+        <label>
+          <span>Categoria</span>
+          <select name="cat" [(ngModel)]="newItem.cat" required>
+            <option value="juego">Juego</option>
+            <option value="accesorio">Accesorio</option>
+            <option value="consola">Consola</option>
+          </select>
+        </label>
+
+        <label class="full-width">
+          <span>Descripcion</span>
+          <textarea name="desc" rows="4" [(ngModel)]="newItem.desc" required></textarea>
+        </label>
+
+        <label>
+          <span>Precio en MXN</span>
+          <input type="number" name="price" min="1" [(ngModel)]="newItem.price" required />
+        </label>
+
+        <label>
+          <span>Iniciales o icono corto</span>
+          <input type="text" name="emoji" maxlength="2" [(ngModel)]="newItem.emoji" placeholder="PS" />
+        </label>
+
+        <label>
+          <span>Nombre del vendedor</span>
+          <input type="text" name="seller" [(ngModel)]="newItem.seller" required />
+        </label>
+
+        <label>
+          <span>WhatsApp</span>
+          <input type="text" name="wa" [(ngModel)]="newItem.wa" placeholder="+521..." required />
+        </label>
+
+        <label class="full-width">
+          <span>Correo institucional o de contacto</span>
+          <input type="email" name="mail" [(ngModel)]="newItem.mail" required />
+        </label>
+
+        <div class="full-width upload-block">
+          <span>Imagen del articulo</span>
+
+          <div class="upload-actions">
+            <label class="upload-btn">
+              Seleccionar imagen
+              <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+            </label>
+
+            <label class="upload-btn alt">
+              Tomar foto
+              <input type="file" accept="image/*" capture="environment" (change)="onImageSelected($event)" />
+            </label>
+
+            <button
+              *ngIf="newItem.imageData"
+              type="button"
+              class="btn btn-ghost"
+              (click)="clearSelectedImage()"
+            >
+              Quitar imagen
+            </button>
+          </div>
+
+          <div class="image-preview" *ngIf="newItem.imageData; else emptyPreview">
+            <img [src]="newItem.imageData" alt="Vista previa del articulo" />
+          </div>
+
+          <ng-template #emptyPreview>
+            <div class="image-placeholder">
+              Agrega una foto desde tu galeria o toma una en el momento para que tu articulo luzca mejor.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" (click)="setView('market')">
+          Ver mercado completo
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Publicar articulo
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

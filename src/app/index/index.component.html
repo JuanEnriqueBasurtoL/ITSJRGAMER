@@ -1,0 +1,294 @@
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">GG</div>
+    ITSJR<span>GAMER</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#noticias">Noticias</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+    <li><a href="#marketplace">Marketplace</a></li>
+    <li><a href="#ranking">Ranking</a></li>
+  </ul>
+  <div class="nav-actions">
+    <ng-container *ngIf="authService.currentUser(); else guestActions">
+      <div class="user-menu">
+        <div class="user-pill">
+          <span class="user-pill-label">Gamertag</span>
+          <strong>{{ authService.currentUser()?.username }}</strong>
+        </div>
+        <button type="button" class="btn btn-ghost logout-btn" (click)="logout()">
+          Cerrar sesion
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #guestActions>
+      <a routerLink="/login" class="btn btn-ghost">Login</a>
+      <a routerLink="/register" class="btn btn-primary">Registrarse</a>
+    </ng-template>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="glow-orb orb1"></div>
+  <div class="glow-orb orb2"></div>
+  <div class="glow-orb orb3"></div>
+
+  <div class="hero-eyebrow">Instituto Tecnologico de San Juan del Rio</div>
+  <h1 class="hero-title">
+    <span class="line1">Tu Hub</span>
+    <span class="line2">Gamer ITSJR</span>
+  </h1>
+  <p class="hero-sub">
+    Noticias, tendencias, quizzes epicos y marketplace estudiantil.
+    Todo lo que necesita la comunidad gamer del ITSJR en un solo lugar.
+  </p>
+  <div class="hero-cta">
+    <a routerLink="/register" class="btn btn-primary btn-lg">Unirse ahora</a>
+    <a href="#noticias" class="btn btn-ghost btn-lg">Explorar</a>
+  </div>
+</section>
+
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">{{ stats.totalUsers }}</div>
+      <div class="stat-label">Usuarios</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ stats.totalNews }}</div>
+      <div class="stat-label">Noticias</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ stats.totalQuizzes }}</div>
+      <div class="stat-label">Quizzes</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ stats.totalItems }}</div>
+      <div class="stat-label">Articulos</div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// Modulos</span>
+      <h2 class="section-title">Todo en <em>un solo lugar</em></h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon icon-cyan">NW</div>
+        <h3>Noticias & Tendencias</h3>
+        <p>Mantente al dia con las ultimas noticias del gaming, tendencias y proximos lanzamientos publicados por administradores.</p>
+        <a href="#noticias" class="card-link">Ver noticias</a>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-pink">QZ</div>
+        <h3>Quiz Gamer</h3>
+        <p>Pon a prueba tus conocimientos con quizzes de opcion multiple. Compite, sube al ranking y demuestra quien sabe mas.</p>
+        <a href="#quiz" class="card-link">Jugar quiz</a>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">MP</div>
+        <h3>Marketplace Estudiantil</h3>
+        <p>Compra y vende consolas, accesorios y juegos entre companeros del ITSJR de forma sencilla y directa.</p>
+        <a href="#marketplace" class="card-link">Ir al marketplace</a>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-gold">RK</div>
+        <h3>Ranking</h3>
+        <p>Consulta los mejores puntajes de los quizzes y compite con tus companeros para llegar al top de la tabla.</p>
+        <a href="#ranking" class="card-link">Ver ranking</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="noticias">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// Ultimas noticias</span>
+      <h2 class="section-title">Gaming <em>News</em></h2>
+    </div>
+
+    <div class="news-grid" *ngIf="featuredNews; else noNews">
+      <div class="news-featured">
+        <div
+          class="news-img"
+          [style.backgroundImage]="featuredNews.imageData ? 'linear-gradient(to bottom, rgba(6,8,16,0.15), rgba(13,17,23,0.9)), url(' + featuredNews.imageData + ')' : ''"
+          [style.backgroundSize]="featuredNews.imageData ? 'cover' : ''"
+          [style.backgroundPosition]="featuredNews.imageData ? 'center' : ''"
+        >
+          {{ featuredNews.imageData ? '' : 'NW' }}
+        </div>
+        <div class="news-body">
+          <span class="news-badge badge-cyan">{{ featuredNews.category }}</span>
+          <h3>{{ featuredNews.title }}</h3>
+          <p style="font-size:0.88rem;color:var(--text-dim);margin-top:0.5rem;line-height:1.6;">
+            {{ featuredNews.summary || 'Esta noticia aun no tiene resumen.' }}
+          </p>
+          <div class="news-meta">{{ featuredNews.author }} · {{ featuredNews.publishedAt | date:'mediumDate' }}</div>
+        </div>
+      </div>
+
+      <div class="news-list">
+        <div class="news-item" *ngFor="let news of latestNews">
+          <div class="news-thumb">NW</div>
+          <div class="news-item-body">
+            <span class="news-badge badge-purple">{{ news.category }}</span>
+            <h4>{{ news.title }}</h4>
+            <p>{{ news.author }} · {{ news.publishedAt | date:'mediumDate' }}</p>
+          </div>
+        </div>
+
+        <div class="news-item" *ngIf="!latestNews.length">
+          <div class="news-thumb">00</div>
+          <div class="news-item-body">
+            <span class="news-badge badge-cyan">Sin registros</span>
+            <h4>No hay mas noticias publicadas</h4>
+            <p>Tu base de datos aun no tiene noticias para mostrar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noNews>
+      <div class="card" style="text-align:center;">
+        <h3>No hay noticias registradas</h3>
+        <p>La pagina esta conectada a tu base de datos y por ahora este apartado aparece vacio porque aun no existen noticias publicadas.</p>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="quiz">
+  <div class="container">
+    <div class="quiz-banner">
+      <div class="quiz-content">
+        <span class="section-tag">// Quiz gamer</span>
+        <h2>¿Cuanto sabes<br/>de videojuegos?</h2>
+        <p>Responde preguntas de opcion multiple sobre tus sagas favoritas. Obten puntos, sube al ranking y compite con toda la comunidad ITSJR.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a [routerLink]="['/quiz']" [queryParams]="{ view: 'selection' }" class="btn btn-primary btn-lg">Empezar Quiz</a>
+          <a href="#ranking" class="btn btn-ghost btn-lg">Ver Ranking</a>
+        </div>
+      </div>
+      <div class="quiz-visual">QZ</div>
+    </div>
+
+    <div class="quiz-home-grid" *ngIf="quizPreview.length; else noQuizPreview">
+      <article class="quiz-home-card" *ngFor="let quiz of quizPreview">
+        <div class="quiz-home-icon">{{ quiz.icon }}</div>
+        <span class="quiz-home-difficulty" [class.diff-easy]="quiz.difficulty === 'easy'" [class.diff-mid]="quiz.difficulty === 'mid'" [class.diff-hard]="quiz.difficulty === 'hard'">
+          {{ quiz.difficulty === 'easy' ? 'Facil' : quiz.difficulty === 'mid' ? 'Medio' : 'Dificil' }}
+        </span>
+        <h3>{{ quiz.title }}</h3>
+        <p>{{ quiz.description }}</p>
+        <div class="quiz-home-meta">{{ quiz.timePerQuestion }} seg por pregunta</div>
+      </article>
+    </div>
+
+    <ng-template #noQuizPreview>
+      <div class="card" style="text-align:center;margin-top:1.5rem;">
+        <h3>No hay quizzes cargados</h3>
+        <p>Cuando existan quizzes activos en tu base de datos, apareceran aqui automaticamente.</p>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="marketplace">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// Marketplace estudiantil</span>
+      <h2 class="section-title">Compra y vende <em>entre gamers</em></h2>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem;">
+      <button type="button" class="btn btn-primary" (click)="openPublishMarketplace()">+ Publicar articulo</button>
+    </div>
+
+    <div class="marketplace-grid" *ngIf="marketplacePreview.length; else noMarketItems">
+      <div class="market-card" *ngFor="let item of marketplacePreview">
+        <div
+          class="market-img"
+          [style.backgroundImage]="item.imageData ? 'linear-gradient(to bottom, rgba(13,17,23,0.15), rgba(13,17,23,0.75)), url(' + item.imageData + ')' : ''"
+          [style.backgroundSize]="item.imageData ? 'cover' : ''"
+          [style.backgroundPosition]="item.imageData ? 'center' : ''"
+        >
+          {{ item.imageData ? '' : 'MP' }}
+          <span class="news-badge badge-cyan market-badge">{{ item.categoryName }}</span>
+        </div>
+        <div class="market-body">
+          <h4>{{ item.title }}</h4>
+          <p>{{ item.description }}</p>
+          <div class="market-price">${{ item.price | number }} MXN</div>
+          <div class="market-contact">
+            <a [href]="'https://wa.me/' + item.whatsapp.replace('+', '')" class="wa" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a [href]="'mailto:' + item.email" class="mail">Email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noMarketItems>
+      <div class="card" style="text-align:center;">
+        <h3>No hay articulos publicados</h3>
+        <p>Tu marketplace ya esta conectado a MySQL y este bloque se llenara cuando existan publicaciones reales en la base de datos.</p>
+      </div>
+    </ng-template>
+
+    <div style="text-align:center;margin-top:2rem;">
+      <a routerLink="/marketplace" class="btn btn-ghost btn-lg">Ver todos los articulos</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="ranking">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// Leaderboard</span>
+      <h2 class="section-title">Top <em>Gamers</em> ITSJR</h2>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <table class="rank-table" *ngIf="ranking.length; else noRanking">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jugador</th>
+            <th>Quizzes</th>
+            <th>Puntaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of ranking">
+            <td><span class="rank-pos" [class.pos-1]="player.position === 1" [class.pos-2]="player.position === 2" [class.pos-3]="player.position === 3">{{ player.position }}</span></td>
+            <td><span class="avatar">GG</span>{{ player.gamertag }}</td>
+            <td>{{ player.quizzesPlayed }}</td>
+            <td class="rank-score">{{ player.totalScore | number }} pts</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #noRanking>
+        <div style="padding:2rem;text-align:center;color:var(--text-dim);">
+          Aun no hay intentos registrados en los quizzes, por eso el ranking aparece vacio.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">ITSJR<span style="color:var(--accent2)">GAMER</span></div>
+  <p style="margin-bottom:0.5rem;">Instituto Tecnologico de San Juan del Rio · Comunidad Gamer</p>
+  <p>© 2026 ITSJR GAMER · Todos los derechos reservados</p>
+</footer>
